@@ -1,6 +1,6 @@
 {
 	"name": "@typematter/cache",
-	"version": "0.0.1-next.1",
+	"version": "0.0.1-next.2",
 	"description": "Simple cache for keyed functions.",
 	"private": false,
 	"type": "module",

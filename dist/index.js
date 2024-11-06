@@ -8,8 +8,8 @@ var cache = (fn, { maxSize = 255, serialize, ttl } = {}) => {
     const key = serialize ? serialize(naturalKey) : naturalKey;
     const entry = entries.get(key);
     if (entry !== void 0) {
-      const { value, timestamp } = entry;
-      if (ttl !== void 0 && Date.now() - timestamp < ttl) {
+      const { value, expires } = entry;
+      if (expires === void 0 || Date.now() < expires) {
         return value;
       } else {
         entries.delete(key);
@@ -19,7 +19,10 @@ var cache = (fn, { maxSize = 255, serialize, ttl } = {}) => {
       return pending.get(key);
     }
     const promise = fn(key).then((value) => {
-      entries.set(key, { value, timestamp: Date.now() });
+      entries.set(key, {
+        value,
+        expires: ttl ? Date.now() + ttl : void 0
+      });
       return value;
     }).catch((error) => {
       throw error;
