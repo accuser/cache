@@ -2,7 +2,7 @@
 
 [![Node.js Package](https://github.com/typematter/cache/actions/workflows/release-package.yml/badge.svg)](https://github.com/typematter/cache/actions/workflows/release-package.yml)
 
-A simple cache for keyed functions.
+A simple [SIEVE](https://cachemon.github.io/SIEVE-website/)-based cache for keyed functions.
 
 ## Table of contents
 
