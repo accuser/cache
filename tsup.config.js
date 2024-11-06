@@ -5,6 +5,7 @@ export default defineConfig({
 	clean: true,
 	dts: true,
 	entryPoints: ['src/index.ts'],
+	external: ['@neophi/sieve-cache'],
 	format: 'esm',
 	outdir: 'dist',
 	platform: 'node',
