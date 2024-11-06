@@ -16,7 +16,7 @@ const cache = <T>(
 	fn: (key: string) => Promise<T>,
 	{ maxSize = 255, serialize, ttl }: CacheOptions = {}
 ): CachedFn<T> => {
-	const entries = new SieveCache<string, { value: T; timestamp: number }>(maxSize);
+	const entries = new SieveCache<string, { value: T; expires?: number }>(maxSize);
 	const pending = new Map<string, Promise<T>>();
 
 	const cachedFn: CachedFn<T> = async (naturalKey) => {
@@ -25,9 +25,9 @@ const cache = <T>(
 		const entry = entries.get(key);
 
 		if (entry !== undefined) {
-			const { value, timestamp } = entry;
+			const { value, expires } = entry;
 
-			if (ttl !== undefined && Date.now() - timestamp < ttl) {
+			if (expires === undefined || Date.now() < expires) {
 				return value;
 			} else {
 				entries.delete(key);
@@ -40,7 +40,11 @@ const cache = <T>(
 
 		const promise = fn(key)
 			.then((value) => {
-				entries.set(key, { value, timestamp: Date.now() });
+				entries.set(key, {
+					value,
+					expires: ttl ? Date.now() + ttl : undefined
+				});
+
 				return value;
 			})
 			.catch((error) => {
